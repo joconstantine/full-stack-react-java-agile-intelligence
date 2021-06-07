@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ProjectRepository extends CrudRepository<Project, Long> {
     public Project findByProjectIdentifier(String projectIdentifier);
+
+    public Iterable<Project> findAll();
 }
