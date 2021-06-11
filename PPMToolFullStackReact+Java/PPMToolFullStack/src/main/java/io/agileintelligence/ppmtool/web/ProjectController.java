@@ -19,6 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/project")
+@CrossOrigin
 public class ProjectController {
     @Autowired
     private ProjectService projectService;
@@ -26,7 +27,7 @@ public class ProjectController {
     @Autowired
     private MapValidationErrorService mapValidationErrorService;
 
-    @PostMapping("")
+    @PostMapping("/")
     public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project,
                                                     BindingResult result){
         ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
@@ -35,6 +36,7 @@ public class ProjectController {
         Project savedProject = projectService.saveOrUpdateProject(project);
         return new ResponseEntity<Project>(savedProject, HttpStatus.CREATED);
     }
+
 
     @GetMapping("/{projectId}")
     public ResponseEntity<?> getProjectById(@PathVariable String projectId) {
