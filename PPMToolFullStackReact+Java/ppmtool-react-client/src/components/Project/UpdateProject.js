@@ -52,6 +52,7 @@ class UpdateProject extends React.Component {
 UpdateProject.propTypes = {
     updateProject: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
+    project: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => ({

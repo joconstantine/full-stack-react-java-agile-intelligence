@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_ERRORS, CLEAR_ERRORS, GET_PROJECTS, GET_PROJECT } from './types';
+import { GET_ERRORS, CLEAR_ERRORS, GET_PROJECTS, GET_PROJECT, DELETE_PROJECT } from './types';
 import history from '../history';
 import projectsAxios from '../apis/projects';
 
@@ -45,10 +45,7 @@ export const getProject = (id) => async dispatch => {
             payload: res.data,
         });
     } catch (err) {
-        dispatch({
-            type: GET_ERRORS,
-            payload: err.response ? err.response.data : err,
-        });
+        history.push('/dashboard');
     }
 }
 
@@ -66,4 +63,12 @@ export const updateProject = (id, project) => async dispatch => {
             payload: err.response ? err.response.data : err,
         });
     }
+}
+
+export const deleteProject = (id) => async dispatch => {
+    await projectsAxios.delete(`/project/${id}`);
+    dispatch({
+        type: DELETE_PROJECT,
+        payload: id
+    });
 }
