@@ -1,11 +1,10 @@
-import axios from 'axios';
 import { GET_ERRORS, CLEAR_ERRORS, GET_PROJECTS, GET_PROJECT, DELETE_PROJECT } from './types';
 import history from '../history';
 import projectsAxios from '../apis/projects';
 
 export const createProject = (project) => async dispatch => {
     try {
-        const res = await projectsAxios.post("/project/", project);
+        await projectsAxios.post("/project/", project);
         dispatch({
             type: CLEAR_ERRORS
         })
@@ -52,7 +51,7 @@ export const getProject = (id) => async dispatch => {
 export const updateProject = (id, project) => async dispatch => {
     try {
         const projectToPost = { ...project, id: id };
-        const res = await projectsAxios.post(`/project/`, projectToPost);
+        await projectsAxios.post(`/project/`, projectToPost);
         dispatch({
             type: CLEAR_ERRORS
         })

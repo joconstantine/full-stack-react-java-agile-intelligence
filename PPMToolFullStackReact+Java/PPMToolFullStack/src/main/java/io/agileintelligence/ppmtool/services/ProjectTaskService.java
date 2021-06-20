@@ -94,4 +94,20 @@ public class ProjectTaskService {
 
         return projectTask;
     }
+
+    public ProjectTask updateByProjectSequence(ProjectTask updatedTask, String projectId, String sequence) {
+        ProjectTask projectTask = findPTByProjectSequence(projectId, sequence);
+        if (!updatedTask.getProjectSequence().equals(projectTask.getProjectSequence())) {
+            throw new ProjectNotFoundException("Something wrong happened.");
+        }
+        projectTask = updatedTask;
+
+        return projectTaskRepository.save(projectTask);
+    }
+
+    public void deleteByProjectSequence(String projectId, String sequence) {
+        ProjectTask projectTask = findPTByProjectSequence(projectId, sequence);
+
+        projectTaskRepository.delete(projectTask);
+    }
 }

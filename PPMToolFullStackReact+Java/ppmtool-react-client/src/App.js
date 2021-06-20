@@ -10,6 +10,8 @@ import AddProject from './components/Project/AddProject';
 import store from './store';
 import history from './history';
 import UpdateProject from './components/Project/UpdateProject';
+import ProjectBoard from './components/ProjectBoard/ProjectBoard';
+import AddProjectTask from './components/ProjectBoard/ProjectTasks/AddProjectTask';
 
 class App extends React.Component {
   render() {
@@ -21,6 +23,8 @@ class App extends React.Component {
             <Route exact path="/dashboard" component={Dashboard} />
             <Route exact path="/addProject" component={AddProject} />
             <Route exact path="/updateProject/:projectId" component={UpdateProject} />
+            <Route exact path="/projectBoard/:projectId" component={ProjectBoard} />
+            <Route exact path="/addProjectTask/:projectId" component={AddProjectTask} />
           </div>
         </Router>
       </Provider>
