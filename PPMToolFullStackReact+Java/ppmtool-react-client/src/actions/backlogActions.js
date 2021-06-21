@@ -1,6 +1,6 @@
 import projectsAxios from '../apis/projects';
 import history from '../history';
-import { CLEAR_ERRORS, GET_ERRORS } from '../actions/types';
+import { CLEAR_ERRORS, GET_ERRORS, GET_BACKLOG } from '../actions/types';
 
 export const addProjectTask = (backlog_id, project_task) => async dispatch => {
     try {
@@ -15,4 +15,17 @@ export const addProjectTask = (backlog_id, project_task) => async dispatch => {
             payload: err.response ? err.response.data : err,
         });
     }
+};
+
+export const getBacklog = backlog_id => async dispatch => {
+    try {
+        const res = await projectsAxios.get(`/backlog/${backlog_id}`);
+        dispatch({
+            type: GET_BACKLOG,
+            payload: res.data,
+        })
+    } catch (err) {
+        history.push('/dashboard');
+    }
 }
+
