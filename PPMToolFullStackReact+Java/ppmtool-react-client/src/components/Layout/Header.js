@@ -22,16 +22,16 @@ class Header extends React.Component {
                             </li>
                         </ul>
 
-                        <ul className="navbar-nav ml-auto">
+                        <ul className="navbar-nav m-md-auto">
                             <li className="nav-item">
-                                <a className="nav-link " href="register.html">
+                                <Link className="nav-link " to="/register">
                                     Sign Up
-                                </a>
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="login.html">
+                                <Link className="nav-link " to="/login">
                                     Login
-                        </a>
+                                </Link>
                             </li>
                         </ul>
                     </div>

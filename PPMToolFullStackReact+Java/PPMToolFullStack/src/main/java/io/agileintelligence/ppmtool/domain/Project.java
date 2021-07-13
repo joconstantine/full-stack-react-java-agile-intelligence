@@ -42,6 +42,13 @@ public class Project {
     @JsonIgnore
     private Backlog backlog;
 
+    @Column(updatable = false)
+    private String projectLeader;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User user;
+
     public Project() {
     }
 
@@ -128,4 +135,19 @@ public class Project {
         this.updated_At = new Date();
     }
 
+    public String getProjectLeader() {
+        return projectLeader;
+    }
+
+    public void setProjectLeader(String projectLeader) {
+        this.projectLeader = projectLeader;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
