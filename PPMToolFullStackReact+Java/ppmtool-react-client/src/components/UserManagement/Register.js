@@ -1,12 +1,24 @@
 import React from 'react';
 import { Form, Field } from 'react-final-form';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import { renderInput } from '../common/FormUtil';
+import { createNewUser } from '../../actions/securityActions';
+import history from '../../history';
 
 class Register extends React.Component {
-    onFormSubmit = () => {
-        console.log("To register the user");
+    onFormSubmit = (formValues) => {
+        this.props.createNewUser(formValues);
     }
+
+    componentDidMount() {
+        const { validToken, user } = this.props.security;
+        if (validToken && user) {
+            history.push("/dashboard");
+        }
+    }
+
     render() {
         return (
             <div className="register">
@@ -21,21 +33,21 @@ class Register extends React.Component {
                                 render={({ handleSubmit }) => (
                                     <form onSubmit={handleSubmit}>
                                         <Field
-                                            name="name"
+                                            name="fullName"
                                             component={renderInput}
                                             className="form-group"
                                             inputClassName="form-control form-control-lg "
                                             placeholder="Name"
-                                            // backendError={this.props.errors['name']}
+                                            backendError={this.props.errors['fullName']}
                                             required="true"
                                         />
                                         <Field
-                                            name="email"
+                                            name="username"
                                             component={renderInput}
                                             className="form-group"
                                             inputClassName="form-control form-control-lg "
                                             placeholder="Email Address"
-                                            // backendError={this.props.errors['email']}
+                                            backendError={this.props.errors['username']}
                                             required="true"
                                             type="email"
                                         />
@@ -45,7 +57,7 @@ class Register extends React.Component {
                                             className="form-group"
                                             inputClassName="form-control form-control-lg "
                                             placeholder="Password"
-                                            // backendError={this.props.errors['password']}
+                                            backendError={this.props.errors['password']}
                                             required="true"
                                             type="password"
                                         />
@@ -55,7 +67,7 @@ class Register extends React.Component {
                                             className="form-group"
                                             inputClassName="form-control form-control-lg "
                                             placeholder="Confirm Password"
-                                            // backendError={this.props.errors['confirmPassword']}
+                                            backendError={this.props.errors['confirmPassword']}
                                             required="true"
                                             type="password"
                                         />
@@ -70,4 +82,17 @@ class Register extends React.Component {
     }
 }
 
-export default Register;
+Register.propTypes = {
+    createNewUser: PropTypes.func.isRequired,
+    errors: PropTypes.object.isRequired,
+    security: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+    errors: state.errors,
+    security: state.security,
+});
+
+export default connect(mapStateToProps, {
+    createNewUser
+})(Register);

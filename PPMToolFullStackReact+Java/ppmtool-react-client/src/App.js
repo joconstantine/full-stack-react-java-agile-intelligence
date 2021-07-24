@@ -1,8 +1,10 @@
 import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Router, Route } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import jwt_decode from 'jwt-decode';
+import setJwtToken from './securityUtils/setJwtToken';
 
 import Dashboard from './components/Dashboard';
 import Header from './components/Layout/Header';
@@ -16,6 +18,26 @@ import UpdateProjectTask from './components/ProjectBoard/ProjectTasks/UpdateProj
 import Landing from './components/Layout/Landing';
 import Register from './components/UserManagement/Register';
 import Login from './components/UserManagement/Login';
+import { SET_CURRENT_USER } from './actions/types';
+import { logout } from './actions/securityActions';
+import SecuredRoute from './securityUtils/SecuredRoute';
+
+const jwtToken = localStorage.getItem("jwtToken");
+
+if (jwtToken) {
+  setJwtToken(jwtToken);
+  const decodedToken = jwt_decode(jwtToken);
+  store.dispatch({
+    type: SET_CURRENT_USER,
+    payload: decodedToken,
+  });
+
+  const currentTime = Date.now() / 1000
+  if (decodedToken.exp < currentTime) {
+    store.dispatch(logout());
+    history.push("/login");
+  }
+}
 
 class App extends React.Component {
   render() {
@@ -34,12 +56,14 @@ class App extends React.Component {
             {
               //Private Routes
             }
-            <Route exact path="/dashboard" component={Dashboard} />
-            <Route exact path="/addProject" component={AddProject} />
-            <Route exact path="/updateProject/:projectId" component={UpdateProject} />
-            <Route exact path="/projectBoard/:projectId" component={ProjectBoard} />
-            <Route exact path="/addProjectTask/:projectId" component={AddProjectTask} />
-            <Route exact path="/updateProjectTask/:projectId/:projectTaskId" component={UpdateProjectTask} />
+            <Switch>
+              <SecuredRoute exact path="/dashboard" component={Dashboard} />
+              <SecuredRoute exact path="/addProject" component={AddProject} />
+              <SecuredRoute exact path="/updateProject/:projectId" component={UpdateProject} />
+              <SecuredRoute exact path="/projectBoard/:projectId" component={ProjectBoard} />
+              <SecuredRoute exact path="/addProjectTask/:projectId" component={AddProjectTask} />
+              <SecuredRoute exact path="/updateProjectTask/:projectId/:projectTaskId" component={UpdateProjectTask} />
+            </Switch>
           </div>
         </Router>
       </Provider>

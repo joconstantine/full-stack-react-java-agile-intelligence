@@ -1,6 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+import history from '../../history';
 
 class Landing extends React.Component {
+    
+     componentDidMount() {
+        const { validToken, user } = this.props.security;
+        if (validToken && user) {
+            history.push("/dashboard");
+        }
+    }
+
     render() {
         return (
             <div className="landing">
@@ -13,12 +26,12 @@ class Landing extends React.Component {
                                     Create your account to join active projects or start your own
                                 </p>
                                 <hr />
-                                <a href="register.html" className="btn btn-lg btn-primary mr-2">
+                                <Link to="/register" className="btn btn-lg btn-primary mr-2">
                                     Sign Up
-                                </a>
-                                <a href="login.html" className="btn btn-lg btn-secondary mr-2">
+                                </Link>
+                                <Link to="/login" className="btn btn-lg btn-secondary mr-2">
                                     Login
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -28,4 +41,12 @@ class Landing extends React.Component {
     }
 }
 
-export default Landing;
+Landing.propTypes = {
+    security: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+    security: state.security,
+});
+
+export default connect(mapStateToProps)(Landing);

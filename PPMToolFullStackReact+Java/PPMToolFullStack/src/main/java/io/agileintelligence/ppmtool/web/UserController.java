@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.security.Security;
 
 @RestController
 @RequestMapping("/api/users")
@@ -46,10 +45,12 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result) {
+        ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
+        if (errorMap != null) return errorMap;
+
         // Validate password match
         userValidator.validate(user, result);
-
-        ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
+        errorMap = mapValidationErrorService.mapValidationService(result);
         if (errorMap != null) return errorMap;
 
         User newUser = userService.saveUser(user);

@@ -1,11 +1,23 @@
 import React from 'react';
 import { Form, Field } from 'react-final-form';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import { renderInput } from '../common/FormUtil';
+import { login } from '../../actions/securityActions';
+import history from '../../history';
 
 class Login extends React.Component {
-    onFormSubmit = () => {
-        console.log("To login the user");
+
+    componentDidMount() {
+        const { validToken, user } = this.props.security;
+        if (validToken && user) {
+            history.push("/dashboard");
+        }
+    }
+
+    onFormSubmit = (LoginRequest) => {
+        this.props.login(LoginRequest);
     }
     render() {
         return (
@@ -20,12 +32,12 @@ class Login extends React.Component {
                                 render={({ handleSubmit }) => (
                                     <form onSubmit={handleSubmit}>
                                         <Field
-                                            name="email"
+                                            name="username"
                                             component={renderInput}
                                             className="form-group"
                                             inputClassName="form-control form-control-lg "
                                             placeholder="Email Address"
-                                            // backendError={this.props.errors['email']}
+                                            backendError={this.props.errors['username']}
                                             required="true"
                                             type="email"
                                         />
@@ -35,11 +47,11 @@ class Login extends React.Component {
                                             className="form-group"
                                             inputClassName="form-control form-control-lg "
                                             placeholder="Password"
-                                            // backendError={this.props.errors['password']}
+                                            backendError={this.props.errors['password']}
                                             required="true"
                                             type="password"
                                         />
-                                        <input type="submit" className="btn btn-info btn-block mt-4" />
+                                        <input type="submit" className="btn btn-info btn-block mt-4" value="Login"/>
                                     </form>
                                 )} />
                         </div>
@@ -50,4 +62,17 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+Login.propTypes = {
+    login: PropTypes.func.isRequired,
+    errors: PropTypes.object.isRequired,
+    security: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+    errors: state.errors,
+    security: state.security,
+});
+
+export default connect(mapStateToProps, {
+    login
+})(Login);
